@@ -139,9 +139,11 @@ function updateForecastWeather() {
   if (!weatherData) return;
   const selectedTime = document.getElementById("forecast-time").value;
   const now = new Date();
+  // Create a target time on the current day using the selected time
   let targetTime = new Date(now.getFullYear(), now.getMonth(), now.getDate());
   const [hours, minutes] = selectedTime.split(":");
   targetTime.setHours(parseInt(hours), parseInt(minutes), 0, 0);
+  // Always use the selected time on the same day, even if in the past.
   let closestForecast = weatherData.hourly[0];
   let minDiff = Math.abs((closestForecast.dt * 1000) - targetTime.getTime());
   for (let forecast of weatherData.hourly) {
@@ -158,6 +160,10 @@ function updateForecastWeather() {
   const forecastIconUrl = `https://openweathermap.org/img/wn/${forecastIconCode}@2x.png`;
   document.getElementById("forecast-weather-icon").innerHTML = `<img src="${forecastIconUrl}" alt="${closestForecast.weather[0].description}" />`;
 }
+
+// Make sure to update the forecast when the user changes the time.
+document.getElementById("forecast-time").addEventListener("change", updateForecastWeather);
+
 
 //-----------------------------------------------------
 // 3) MTA GTFS-RT LOGIC (Trip Updates)
