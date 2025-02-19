@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pursuit Departure Board</title>
+
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Poppins Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <!-- Protobuf.js from CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/protobufjs/6.11.2/protobuf.min.js"></script>
+  <style>
+    body {
+      background-color: #292929;
+      color: #e0e0e0;
+      font-family: 'Poppins', sans-serif;
+    }
+  </style>
+</head>
+<body class="min-h-screen">
+  <div id="app" class="p-4">
+    <!-- Header -->
+    <header class="mb-6 relative">
+      <div class="flex items-center justify-between">
+        <h1 class="text-6xl font-bold text-[#4343EA]">Pursuit Departure Board</h1>
+        <img src="pursuit-logo.png" alt="Pursuit Logo" class="h-16 w-auto">
+      </div>
+    </header>
+
+    <!-- Weather Section -->
+    <section id="weather" class="mb-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <!-- Current Weather Block -->
+        <div id="current-weather" style="background-color: #3d3d3d;" class="p-4 rounded text-center">
+          <h3 class="text-2xl font-semibold mb-2 text-[#ecff00]">Current Weather</h3>
+          <div class="flex justify-around items-center">
+            <div>
+              <p class="text-lg">Temperature</p>
+              <p id="temp" class="text-5xl font-bold">--</p>
+            </div>
+            <div id="weather-icon" class="mx-4"></div>
+            <div>
+              <p class="text-lg">Wind</p>
+              <p id="wind" class="text-5xl font-bold">--</p>
+            </div>
+          </div>
+        </div>
+        <!-- Forecast Weather Block -->
+        <div id="forecast-weather" style="background-color: #3d3d3d;" class="p-4 rounded text-center">
+          <div class="flex items-center justify-center mb-2">
+            <h3 class="text-2xl font-semibold text-[#ecff00]">Departure Weather – Select Time</h3>
+            <select id="forecast-time" class="p-2 bg-gray-700 rounded ml-4">
+              <option value="17:00">5:00 PM</option>
+              <option value="17:15">5:15 PM</option>
+              <option value="17:30">5:30 PM</option>
+              <option value="17:45">5:45 PM</option>
+              <option value="18:00" selected>6:00 PM</option>
+              <option value="18:15">6:15 PM</option>
+              <option value="18:30">6:30 PM</option>
+              <option value="18:45">6:45 PM</option>
+              <option value="19:00">7:00 PM</option>
+            </select>
+          </div>
+          <div class="flex justify-around items-center">
+            <div>
+              <p class="text-lg">Temperature</p>
+              <p id="forecast-temp" class="text-5xl font-bold">--</p>
+            </div>
+            <div id="forecast-weather-icon" class="mx-4"></div>
+            <div>
+              <p class="text-lg">Wind</p>
+              <p id="forecast-wind" class="text-5xl font-bold">--</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Stations Section -->
+    <section id="stations" class="mb-6">
+      <h2 class="text-2xl font-semibold mb-4 text-center text-[#4343ea]">
+        Nearby Stations – Select Walking Speed
+        <select id="walk-speed-select" class="p-2 text-sm bg-gray-700 rounded ml-4">
+          <option value="slow">Slow</option>
+          <option value="average" selected>Average</option>
+          <option value="fast">Fast</option>
+        </select>
+      </h2>
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <!-- Station: Hunters Point -->
+        <div id="station-hunters-point" style="background-color: #3d3d3d;" class="p-4 rounded animate-slide-up">
+          <button id="button-hunters-point" class="w-full bg-gray-700 p-2 rounded text-left text-xl font-semibold text-[#ecff00]" onclick="toggleStation('hunters-point')">
+            Hunters Point - 9 minute walk
+          </button>
+          <div id="content-hunters-point" class="mt-2">
+            <!-- Dynamic train times go here -->
+          </div>
+        </div>
+        <!-- Station: Court Square -->
+        <div id="station-court-square" style="background-color: #3d3d3d;" class="p-4 rounded animate-slide-up">
+          <button id="button-court-square" class="w-full bg-gray-700 p-2 rounded text-left text-xl font-semibold text-[#ecff00]" onclick="toggleStation('court-square')">
+            Court Square - 16 minute walk
+          </button>
+          <div id="content-court-square" class="mt-2">
+            <!-- Dynamic train times go here -->
+          </div>
+        </div>
+        <!-- Station: 21st Street -->
+        <div id="station-21st-street" style="background-color: #3d3d3d;" class="p-4 rounded animate-slide-up">
+          <button id="button-21st-street" class="w-full bg-gray-700 p-2 rounded text-left text-xl font-semibold text-[#ecff00]" onclick="toggleStation('21st-street')">
+            21st Street - 13 minute walk
+          </button>
+          <div id="content-21st-street" class="mt-2">
+            <!-- Dynamic train times go here -->
+          </div>
+        </div>
+        <!-- Station: Queensboro Plaza -->
+        <div id="station-queensboro-plaza" style="background-color: #3d3d3d;" class="p-4 rounded animate-slide-up">
+          <button id="button-queensboro-plaza" class="w-full bg-gray-700 p-2 rounded text-left text-xl font-semibold text-[#ecff00]" onclick="toggleStation('queensboro-plaza')">
+            Queensboro Plaza - 20 minute walk
+          </button>
+          <div id="content-queensboro-plaza" class="mt-2">
+            <!-- Dynamic train times go here -->
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+  
+  <!-- Custom slide-up animation -->
+  <style>
+    @keyframes slideUp {
+      from {
+        transform: translateY(50px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+    .animate-slide-up {
+      animation: slideUp 1.5s ease-out forwards;
+    }
+  </style>
+  
+  <script src="script.js"></script>
+</body>
+</html>
